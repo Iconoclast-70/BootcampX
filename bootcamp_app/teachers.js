@@ -14,12 +14,13 @@ pool.query(`
   JOIN assistance_requests ON teachers.id = assistance_requests.teacher_id
   JOIN students ON assistance_requests.student_id = students.id
   JOIN cohorts ON cohorts.id = students.cohort_id
-  WHERE cohorts.name = '${process.argv[2]}'
+  WHERE cohorts.name = $1
   GROUP BY teachers.name, cohorts.name
   ORDER BY teacher;
-`)
+`, [process.argv[2]])
 .then(res => {
   console.log(res.rows);
+  pool.end();
 })
 .catch(err => console.error('query error', err.stack));
 
